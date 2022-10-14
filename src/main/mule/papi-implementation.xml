@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<sub-flow name="buy_stock_by_amount" doc:id="10ce99cd-6ca1-404c-85b8-255ce0202e49" >
+		<logger level="INFO" doc:name="Logger" doc:id="ec1a076d-a08e-4bc2-b965-f4b34b1f5013" message="#[payload]"/>
+		<http:request method="GET" doc:name="Request" doc:id="b57ea9dc-aacd-48bc-bd1e-3eaa1ff8eda7" config-ref="HTTP_Request_check_customer_amount" path="/getCustomerWalletAmount/{customer_id}" target="getCustomerWalletAmount">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	customer_id : payload.customer_id
+}]]]></http:uri-params>
+		</http:request>
+		<choice doc:name="Choice" doc:id="96acb646-0e60-4101-b5b0-c37806577165" >
+			<when expression="#[vars.getCustomerWalletAmount.wallet &gt;= payload.amount]">
+				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio " doc:id="6fe67bd1-be19-4f67-82c8-bbafc8626fb4" config-ref="HTTP_Request_insert_customer_portfolio"/>
+			</when>
+		</choice>
+	</sub-flow>
+</mule>

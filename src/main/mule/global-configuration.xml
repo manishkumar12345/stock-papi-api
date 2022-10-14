@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="c9f659e4-4f24-406a-bb9c-0e9917c4c28d" >
+		<db:generic-connection url="${db.URL}" driverClassName="${db.driver}" user="${db.user}" password="${db.password}"/>
+	</db:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="15cffac2-03fa-4ebc-8c55-eb3c9a602b68" basePath="/api">
+		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="540000"/>
+	</http:request-config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="07ea340c-f573-4172-bb79-ac1b48ea45bb" />
+	<configuration-properties doc:name="Configuration properties" doc:id="b2023c61-6c40-4ae7-92e3-94a19e0c054d" file="${env}-configuration.properties" />
+	<global-property doc:name="Global Property" doc:id="a6ce4609-310a-4ed3-841b-82c174ca1c34" name="env" value="prod" />
+	<http:request-config name="HTTP_Request_check_customer_amount" doc:name="HTTP Request configuration" doc:id="081a9f6d-72cb-43e0-94d5-fa88487d6f10" basePath="/api" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_insert_customer_portfolio" doc:name="HTTP Request configuration" doc:id="6f86bfc0-9281-4a68-93ee-e95067826dd6" basePath="/api" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+</mule>

@@ -1,0 +1,31 @@
+#%RAML 1.0
+title: stock-papi-api
+
+protocols: [HTTP,HTTPS]
+
+/process-buy-stock-by-quantity:
+  post:
+    description: Buy Stock by Quantity
+    responses:
+      201:
+        body:
+          application/json:
+            example: !include error-response/201.json
+
+/process-buy-stock-by-amount:
+  post:
+    description: Buy Stock by the amount
+    responses:
+      201:
+        body:
+          application/json:
+            example: !include error-response/201.json
+
+/process-sell-stock-by-quantity:
+  post:
+    description: Sell Stock by the Quantity
+    responses:
+      201:
+        body:
+          application/json:
+            example: !include error-response/201.json
