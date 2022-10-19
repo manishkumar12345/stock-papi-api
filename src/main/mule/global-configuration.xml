@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	 <http:listener-config name="stock-papi-api-httpListenerConfig">
+        <http:listener-connection host="${http.host}" port="${http.port}" readTimeout="900000000" connectionIdleTimeout="60000"/>
+    </http:listener-config>
+    <apikit:config name="stock-papi-api-config" api="stock-papi-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="c9f659e4-4f24-406a-bb9c-0e9917c4c28d" >
-		<db:generic-connection url="${db.URL}" driverClassName="${db.driver}" user="${db.user}" password="${db.password}"/>
+		<db:generic-connection url="${db.URL}" driverClassName="${db.driver}" user="${db.user}" password="${secure::db.password}"/>
 	</db:config>
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="15cffac2-03fa-4ebc-8c55-eb3c9a602b68" basePath="/api">
 		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="540000"/>
@@ -17,16 +24,17 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 	<configuration-properties doc:name="Configuration properties" doc:id="b2023c61-6c40-4ae7-92e3-94a19e0c054d" file="${env}-configuration.properties" />
 	<global-property doc:name="Global Property" doc:id="a6ce4609-310a-4ed3-841b-82c174ca1c34" name="env" value="prod" />
 	<http:request-config name="HTTP_Request_check_customer_amount" doc:name="HTTP Request configuration" doc:id="081a9f6d-72cb-43e0-94d5-fa88487d6f10" basePath="/api" >
-		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
+		<http:request-connection host="${http.host}" port="${http.sapi-port}" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_insert_customer_portfolio" doc:name="HTTP Request configuration" doc:id="6f86bfc0-9281-4a68-93ee-e95067826dd6" basePath="/api" >
-		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
+		<http:request-connection host="${http.host}" port="${http.sapi-port}" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_to_add_amount_customer_wallet" doc:name="HTTP Request configuration" doc:id="1c4e0256-0fda-4743-862e-7005a591fc88" basePath="/api" >
-		<http:request-connection host="localhost" port="8081" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
+		<http:request-connection host="${http.host}" port="${http.sapi-port}" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
 	</http:request-config>
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="6014f6f8-6848-47ae-a83d-d8e75248ea08" environment="${mule.env}" />
 	<http:request-config name="HTTP_Request_to_stock-data" doc:name="HTTP Request configuration" doc:id="6d62be0c-8270-4027-99fd-de2734ee84b3" basePath="/api">
-		<http:request-connection host="localhost" port="8081" />
+		<http:request-connection host="${http.host}" port="${http.sapi-port}" />
 	</http:request-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="b6fb46d7-d620-4076-a898-919b9f1b4bcd" file="prod-configuration.properties" key="1234567812345678" />
 </mule>

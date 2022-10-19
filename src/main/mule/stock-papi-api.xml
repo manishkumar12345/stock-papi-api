@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <http:listener-config name="stock-papi-api-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8083" readTimeout="900000000" connectionIdleTimeout="60000"/>
-    </http:listener-config>
-    <apikit:config name="stock-papi-api-config" api="stock-papi-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="stock-papi-api-main">
         <http:listener config-ref="stock-papi-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -124,7 +120,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="post:\process-buy-stock-by-amount:stock-papi-api-config">
-        <logger level="INFO" doc:name="Logger" doc:id="28e89b47-3cb6-4f79-8815-00c8ce092f6b" message="teeeeeeeeeeeeeeeeeee"/>
+        <logger level="INFO" doc:name="Logger" doc:id="28e89b47-3cb6-4f79-8815-00c8ce092f6b" message="in process api"/>
 		<flow-ref doc:name="call to buy_stock_by_amount" doc:id="b1fd20e0-6cc5-4168-b76c-bd8f05e28731" name="buy_stock_by_amount"/>
 		<error-handler >
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bfa4c866-0843-4977-94aa-06a24ffb1c45" />
