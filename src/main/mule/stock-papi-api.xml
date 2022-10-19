@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
     <http:listener-config name="stock-papi-api-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8083" />
+        <http:listener-connection host="0.0.0.0" port="8083" readTimeout="900000000" connectionIdleTimeout="60000"/>
     </http:listener-config>
     <apikit:config name="stock-papi-api-config" api="stock-papi-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="stock-papi-api-main">
@@ -124,43 +124,29 @@ output application/json
         </error-handler>
     </flow>
     <flow name="post:\process-buy-stock-by-amount:stock-papi-api-config">
-        <flow-ref doc:name="call to buy_stock_by_amount" doc:id="b1fd20e0-6cc5-4168-b76c-bd8f05e28731" name="buy_stock_by_amount"/>
-		<ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  code: 201,
-  message: "Created successfully."
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <logger level="INFO" doc:name="Logger" doc:id="28e89b47-3cb6-4f79-8815-00c8ce092f6b" message="teeeeeeeeeeeeeeeeeee"/>
+		<flow-ref doc:name="call to buy_stock_by_amount" doc:id="b1fd20e0-6cc5-4168-b76c-bd8f05e28731" name="buy_stock_by_amount"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bfa4c866-0843-4977-94aa-06a24ffb1c45" />
+		</error-handler>
     </flow>
     <flow name="post:\process-buy-stock-by-quantity:stock-papi-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
+        <flow-ref doc:name="call to buy-stock-by-quantity" doc:id="24327e29-2b16-44f7-896f-b51561bce563" name="buy_stock_by_quantity"/>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="127ea4f5-8075-4111-a1ec-ced73f73850f" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="255db35a-f985-4515-aec6-0a10991f1190" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
 ---
 {
-  code: 201,
-  message: "Created successfully."
 }]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
     </flow>
     <flow name="post:\process-sell-stock-by-quantity:stock-papi-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  code: 201,
-  message: "Created successfully."
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="call to sell-stock-by-quantity" doc:id="981c8147-a9a8-48fb-bf59-cbdc5b4f0c5d" name="sell-stock-by-quantity"/>
     </flow>
 </mule>
