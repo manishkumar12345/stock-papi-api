@@ -37,4 +37,5 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 		<http:request-connection host="${http.host}" port="${http.sapi-port}" />
 	</http:request-config>
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="b6fb46d7-d620-4076-a898-919b9f1b4bcd" file="prod-configuration.properties" key="1234567812345678" />
+	<configuration doc:name="Configuration" doc:id="6989bcb7-6b20-4e66-9421-7024a7610845" defaultErrorHandler-ref="papi-common-error-handlingError_Handler" />
 </mule>
