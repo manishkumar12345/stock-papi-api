@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 	<sub-flow name="buy_stock_by_amount" doc:id="10ce99cd-6ca1-404c-85b8-255ce0202e49" >
 		<logger level="INFO" doc:name="console-original-payload" doc:id="ec1a076d-a08e-4bc2-b965-f4b34b1f5013" message="#[payload]"/>
 		<set-variable value="#[payload]" doc:name="Set original-payload-in-variable" doc:id="8dad4fd8-7144-400f-a6c6-ed4f6252414b" variableName="original_payload"/>
-		<http:request method="GET" doc:name="Request to check-customer-wallet-amount" doc:id="b57ea9dc-aacd-48bc-bd1e-3eaa1ff8eda7" config-ref="HTTP_Request_check_customer_amount" path="/getCustomerWalletAmount/{customer_id}" target="getCustomerWalletAmount" responseTimeout="6000000">
+		<http:request method="GET" doc:name="Request to check-customer-wallet-amount" doc:id="b57ea9dc-aacd-48bc-bd1e-3eaa1ff8eda7" config-ref="HTTP_Request_check_customer_amount" path="/getCustomerWalletAmount/{customer_id}" target="getCustomerWalletAmount" responseTimeout="1800000">
 			<http:body ><![CDATA[#[vars.original_payload]]]></http:body>
 			<http:uri-params ><![CDATA[#[output application/json
 ---
@@ -21,7 +21,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<choice doc:name="Choice" doc:id="96acb646-0e60-4101-b5b0-c37806577165" >
 			<when expression="#[vars.getCustomerWalletAmount.wallet[0] as Number &gt;= vars.original_payload.amount as Number]">
 				<logger level="INFO" doc:name="wallet-amounts" doc:id="6b029354-77df-4b36-8917-81f319b52aa9" message="customer has sufficient balance"/>
-				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="6fe67bd1-be19-4f67-82c8-bbafc8626fb4" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" target="portfolioSuccessStatus" responseTimeout="600000">
+				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="6fe67bd1-be19-4f67-82c8-bbafc8626fb4" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" target="portfolioSuccessStatus" responseTimeout="1800000">
 					<http:body ><![CDATA[#[vars.original_payload]]]></http:body>
 					<http:uri-params ><![CDATA[#[output application/java
 ---
@@ -39,7 +39,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 				</http:request>
 				<choice doc:name="Choice" doc:id="9f83b77d-5d05-4aa2-8fab-d5184c791108">
 					<when expression="#[vars.portfolioSuccessStatus.success==true]">
-						<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="db58e615-3f9a-4edb-a450-42f2cb91e4ed" path="/wallet" config-ref="HTTP_Request_to_add_amount_customer_wallet" responseTimeout="600000">
+						<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="db58e615-3f9a-4edb-a450-42f2cb91e4ed" path="/wallet" config-ref="HTTP_Request_to_add_amount_customer_wallet" responseTimeout="1800000">
 							<http:body ><![CDATA[#[vars.original_payload]]]></http:body>
 							<http:query-params ><![CDATA[#[output application/java
 ---
@@ -79,7 +79,7 @@ output application/json
 	<sub-flow name="buy_stock_by_quantity" doc:id="3db180d2-47bc-4278-8109-5eecfac83052" >
 		<logger level="INFO" doc:name="console-original-payload" doc:id="8b3e974f-c57d-4b50-9140-44486b1a996f" message="#[payload]" />
 		<set-variable value="#[payload]" doc:name="Set original-payload-in-variable" doc:id="c24d19d8-b46c-4562-af50-7d6a178cfe9c" variableName="original_payload" />
-		<http:request method="GET" doc:name="Request to check-customer-wallet-amount" doc:id="5590462a-edc3-4df1-96e5-80a7e3145405" config-ref="HTTP_Request_check_customer_amount" path="/getCustomerWalletAmount/{customer_id}" responseTimeout="6000000" target="getCustomerWalletAmount" >
+		<http:request method="GET" doc:name="Request to check-customer-wallet-amount" doc:id="5590462a-edc3-4df1-96e5-80a7e3145405" config-ref="HTTP_Request_check_customer_amount" path="/getCustomerWalletAmount/{customer_id}" responseTimeout="1800000" target="getCustomerWalletAmount" >
 			<http:body ><![CDATA[#[vars.original_payload]]]></http:body>
 			<http:uri-params ><![CDATA[#[output application/json
 ---
@@ -100,7 +100,7 @@ vars.original_payload.quantity as Number*12]]></ee:set-variable>
 		<choice doc:name="Choice" doc:id="4c0c44e4-6bb3-4fd6-8f2c-bbbbf27dd025" >
 			<when expression="#[vars.getCustomerWalletAmount.wallet[0] as Number &gt;= vars.transformTotalAmount as Number]" >
 				<logger level="INFO" doc:name="wallet-amounts" doc:id="37f358dc-391c-479f-add2-0408cdb517a3" message="customer has sufficient balance" />
-				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="4d836c94-07ed-40b4-b2ab-c1c17d633753" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" responseTimeout="600000" target="portfolioSuccessStatus" >
+				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="4d836c94-07ed-40b4-b2ab-c1c17d633753" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" responseTimeout="1800000" target="portfolioSuccessStatus" >
 					<http:body ><![CDATA[#[vars.original_payload]]]></http:body>
 					<http:uri-params ><![CDATA[#[output application/java
 ---
@@ -118,7 +118,7 @@ vars.original_payload.quantity as Number*12]]></ee:set-variable>
 				</http:request>
 				<choice doc:name="Choice" doc:id="94ba6833-fc07-4149-91f7-e98f8316c21f" >
 					<when expression="#[vars.portfolioSuccessStatus.success==true]" >
-						<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="fe2b5697-da82-40c1-9822-b49f9144a660" config-ref="HTTP_Request_to_add_amount_customer_wallet" path="/wallet" responseTimeout="600000" >
+						<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="fe2b5697-da82-40c1-9822-b49f9144a660" config-ref="HTTP_Request_to_add_amount_customer_wallet" path="/wallet" responseTimeout="1800000" >
 							<http:body ><![CDATA[#[vars.original_payload ++ {"amount" : vars.transformTotalAmount}]]]></http:body>
 							<http:query-params ><![CDATA[#[output application/java
 ---
@@ -158,7 +158,7 @@ output application/json
 	<sub-flow name="sell-stock-by-quantity" doc:id="620e5f7c-d66d-4bd5-b112-f640d1b8a026">
 		<logger level="INFO" doc:name="console-original-payload" doc:id="6685006f-7cae-4eed-9643-7bbe1e5596d5" message="#[payload]" />
 		<set-variable value="#[payload]" doc:name="Set original-payload-in-variable" doc:id="c83d8a8a-6fe7-42ee-990d-df80b90c0dd3" variableName="original_payload" />
-		<http:request method="GET" doc:name="Request to stock-data" doc:id="d4afce54-90ea-4f82-9178-e3b46267550a" config-ref="HTTP_Request_to_stock-data" path="/getStockBySymbol/{stock_symbol}" target="stockData" responseTimeout="600000">
+		<http:request method="GET" doc:name="Request to stock-data" doc:id="d4afce54-90ea-4f82-9178-e3b46267550a" config-ref="HTTP_Request_to_stock-data" path="/getStockBySymbol/{stock_symbol}" target="stockData" responseTimeout="1800000">
 			<http:uri-params><![CDATA[#[output application/java
 ---
 {
@@ -177,7 +177,7 @@ vars.original_payload.quantity as Number* vars.stockData.amount[0] as Number]]><
 			</ee:variables>
 		</ee:transform>
 				<logger level="INFO" doc:name="wallet-amounts" doc:id="6a4e930a-3ed3-492c-bfe6-07d8956ed08f" message="sell stock" />
-				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="f6356d8d-8aec-43fc-9482-e722238eaa16" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" responseTimeout="600000" target="portfolioSuccessStatus">
+				<http:request method="POST" doc:name="Request to insert stock in cutomer portfolio" doc:id="f6356d8d-8aec-43fc-9482-e722238eaa16" config-ref="HTTP_Request_insert_customer_portfolio" path="/customerPortfolio/{customer_id}" responseTimeout="1800000" target="portfolioSuccessStatus">
 					<http:body><![CDATA[#[vars.original_payload]]]></http:body>
 					<http:uri-params><![CDATA[#[output application/java
 ---
@@ -193,7 +193,7 @@ vars.original_payload.quantity as Number* vars.stockData.amount[0] as Number]]><
 	sell_date: now() as Date {format:'yyyy-mm-dd'}
 }]]]></http:query-params>
 				</http:request>
-				<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="8c686d3d-7e52-47fb-94ca-3bd5bc743890" config-ref="HTTP_Request_to_add_amount_customer_wallet" path="/wallet" responseTimeout="600000">
+				<http:request method="POST" doc:name="Request to add_amount_customer_wallet" doc:id="8c686d3d-7e52-47fb-94ca-3bd5bc743890" config-ref="HTTP_Request_to_add_amount_customer_wallet" path="/wallet" responseTimeout="1800000">
 							<http:body><![CDATA[#[vars.original_payload ++ {"amount" : vars.transformTotalAmount}]]]></http:body>
 							<http:query-params><![CDATA[#[output application/java
 ---
