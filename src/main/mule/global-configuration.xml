@@ -22,7 +22,7 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	</http:request-config>
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="07ea340c-f573-4172-bb79-ac1b48ea45bb" />
 	<configuration-properties doc:name="Configuration properties" doc:id="b2023c61-6c40-4ae7-92e3-94a19e0c054d" file="${env}-configuration.properties" />
-	<global-property doc:name="Global Property" doc:id="a6ce4609-310a-4ed3-841b-82c174ca1c34" name="env" value="prod" />
+	<global-property doc:name="Global Property" doc:id="a6ce4609-310a-4ed3-841b-82c174ca1c34" name="env" value="local" />
 	<http:request-config name="HTTP_Request_check_customer_amount" doc:name="HTTP Request configuration" doc:id="081a9f6d-72cb-43e0-94d5-fa88487d6f10" basePath="/api" >
 		<http:request-connection host="${http.host}" port="${http.sapi-port}" connectionIdleTimeout="60000" streamResponse="true" responseBufferSize="4024"/>
 	</http:request-config>
@@ -36,6 +36,7 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<http:request-config name="HTTP_Request_to_stock-data" doc:name="HTTP Request configuration" doc:id="6d62be0c-8270-4027-99fd-de2734ee84b3" basePath="/api">
 		<http:request-connection host="${http.host}" port="${http.sapi-port}" />
 	</http:request-config>
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="b6fb46d7-d620-4076-a898-919b9f1b4bcd" file="prod-configuration.properties" key="1234567812345678" />
 	<configuration doc:name="Configuration" doc:id="6989bcb7-6b20-4e66-9421-7024a7610845" defaultErrorHandler-ref="papi-common-error-handlingError_Handler" />
+	<configuration-properties doc:name="Configuration properties" doc:id="da460e5d-9da1-4929-a493-65193f30804c" file="secure-config.properties" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="a102a2b6-acc8-47ab-b1cb-032da03f2b09" file="secure-config.properties" key="1234567812345678" />
 </mule>
